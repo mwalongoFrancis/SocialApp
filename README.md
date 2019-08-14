@@ -1,4 +1,4 @@
-# pt_project_1
+# SocialApp
 
 A new Flutter project.
 
