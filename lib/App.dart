@@ -10,7 +10,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: LoginPage(),
+      home: HomePage(),
       routes: {
         loginPage: (BuildContext context) => LoginPage(),
         homePage: (BuildContext context) => HomePage(),

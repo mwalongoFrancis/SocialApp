@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pt_project_1/constants/constants.dart';
+// import 'package:pt_project_1/constants/constants.dart';
+import 'package:pt_project_1/data/scoped_models/main.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:scoped_model/scoped_model.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -29,13 +32,13 @@ if(await canLaunch(_url)){
   final _loginScreenkey = GlobalKey<FormState>();
   final _emailPagekey = GlobalKey<FormFieldState>();
   final _passwordPagekey = GlobalKey<FormFieldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final String _userEmail = "developer@gmail.com";
-  final String _userPassword = "123";
-
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainModel model) {
+      return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -91,9 +94,7 @@ if(await canLaunch(_url)){
                   validator: (value) {
                     if (value.isEmpty) {
                       return "email required";
-                    }else if(value != _userEmail){
-
-                    } else {
+                    }else {
                       return null;
                     }
                   },
@@ -115,9 +116,7 @@ if(await canLaunch(_url)){
                   validator: (value) {
                     if (value.isEmpty) {
                       return "password required";
-                    } else if (value != _userPassword) {
-                      return "wrong password";
-                    } else {
+                    }else {
                       return null;
                     }
                   },
@@ -166,10 +165,26 @@ if(await canLaunch(_url)){
                                 color: Colors.white)),
                         onPressed: () {
                           if (_loginScreenkey.currentState.validate()) {
-                            Navigator.pushReplacementNamed(context, homePage);
-                          } else {
-                            print('error');
+                          model.toggleShowSpinner();
+                          var time = 0;
+                          final t = Timer(Duration(seconds: 3), (){
+                            model.toggleShowSpinner();
+                            time = 3;
+                          });
+
+                          if(time == 3){
+                            t.cancel();
                           }
+
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(content: 
+                            ListTile(
+                              leading: Icon(Icons.error),
+                              title: Text('incorrect email or password'),
+                              trailing: Icon(Icons.error, color: Colors.red),
+                            ),)
+                          );
+                          } 
                         },
                       ),
                     ),
@@ -256,5 +271,6 @@ if(await canLaunch(_url)){
         ),
       ),
     );
+    },);
   }
 }
