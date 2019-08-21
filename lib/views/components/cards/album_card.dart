@@ -70,7 +70,7 @@ class AlbumCard extends StatelessWidget {
                             height: 40,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: AssetImage(album.avatar),
+                                    image: AssetImage(album.cover),
                                     fit: BoxFit.cover),
                                 color: Colors.redAccent[100],
                                 border: Border.all(
@@ -82,7 +82,7 @@ class AlbumCard extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                album.author,
+                                album.authorId,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -96,7 +96,7 @@ class AlbumCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              album.comments.toString(),
+                              album.tittle.toString(),
                               textAlign: TextAlign.start,
                               style: TextStyle(color: Colors.white),
                             ),

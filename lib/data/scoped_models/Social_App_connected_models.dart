@@ -1,12 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:pt_project_1/api/api.dart';
+import 'package:pt_project_1/models/album.dart';
 import 'package:pt_project_1/models/user.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-mixin SocialAppConnectedModel on Model {}
+mixin SocialAppConnectedModel on Model {
+  List<Album> _availableAlbums;
+}
 
-mixin Album_model on SocialAppConnectedModel {}
+mixin Album_model on SocialAppConnectedModel {
+  //gette of albums
+  List<Album> get availableAlbums => _availableAlbums;
+  //function to fetch albums
+  Future<void> getAlbums() async {
+    try{
+      http.Response response = await http.get(api + 'albums');
+    Map<String, dynamic> data = json.decode(response.body);
+    print(data);
+    }catch(error){
+      print('item not found');
+    }
+    
+  }
+}
 
 mixin Category_model on SocialAppConnectedModel {}
 
@@ -29,7 +50,8 @@ mixin User_model on SocialAppConnectedModel {
   final String _password = "123";
   User _user;
 
-  Future<bool> login({@required String email, @required String password}) async {
+  Future<bool> login(
+      {@required String email, @required String password}) async {
     bool _isLogedIn = false;
     final SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -61,17 +83,17 @@ mixin User_model on SocialAppConnectedModel {
     pref.clear();
     notifyListeners();
   }
-  Future <void> autoAunthenticate() async{
+
+  Future<void> autoAunthenticate() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     String _token = pref.getString("token");
-    if(_token.isNotEmpty){
+    if (_token.isNotEmpty) {
       _user = User(
-          
           email: pref.getString('email'),
           id: pref.getInt('id'),
           name: pref.getString('name'),
-          token: pref.getString('token'), avatar: pref.getString('avatar'));
-      
+          token: pref.getString('token'),
+          avatar: pref.getString('avatar'));
     }
   }
 
